@@ -54,56 +54,60 @@ function pickStuff(stuff) {
             }
         ]
     ).then(function (value) {
-        // checkInventory(value, stuff);
+        // throws error message if they select an item we dont have
+        if (value.thisOne > 10) {
+            console.log("Oh no! I don't know what item that is!");
+            connection.end();
+        } else {
 
-        var query = "SELECT stock FROM bamazon.products WHERE ?"
-        connection.query(query, [{ item_id: value.thisOne }], function (err, res) {
-            if (err) throw err;
+            var query = "SELECT stock FROM bamazon.products WHERE ?"
+            connection.query(query, [{ item_id: value.thisOne }], function (err, res) {
+                if (err) throw err;
 
-            var currentStock = res[0].stock;
-            var gimmeThis = value.thisOne;
+                var currentStock = res[0].stock;
+                var gimmeThis = value.thisOne;
 
-            if (value.howMany <= currentStock) {
+                if (value.howMany >= currentStock) {
+                    console.log("Oh no, I don't have enough of that!");
+                    connection.end();
 
-                var newStock = currentStock - value.howMany;
-            
-                makeSale(newStock, gimmeThis);
-                payUp(gimmeThis, value.howMany);
-                connection.end();
-            } else {
+                } else {
 
+                    var newStock = currentStock - value.howMany;
 
-                console.log("Oh S***!, I don't have enough of that!");
-                connection.end();
+                    makeSale(newStock, gimmeThis);
+                    payUp(gimmeThis, value.howMany);
+                    connection.end();
 
-            };
+                };
 
-        });
-
+            });
 
 
+        }
     });
 };
 
 
 var makeSale = function (quantity, thisItem) {
     var query = "UPDATE bamazon.products SET ? WHERE ?"
-    connection.query(query, [{ stock: quantity },{item_id: thisItem}], function (err, res) {
+    connection.query(query, [{ stock: quantity }, { item_id: thisItem }], function (err, res) {
         if (err) throw err;
-    
-    
+
+
     })
 };
 
 
 
-var payUp = function (variable, amount){
+var payUp = function (variable, amount) {
 
     var query = "Select price FROM bamazon.products WHERE ?"
     connection.query(query, [{ item_id: variable }], function (err, res) {
         if (err) throw err;
 
-        var indAmnt= res[0].price;
-    var finalTot = indAmnt * amount;
-    console.log("Your total is: " + finalTot +". Thank you for your business!")
-})};
+        var indAmnt = res[0].price;
+        var finalTot = indAmnt * amount;
+        console.log("Your total is: " + finalTot + ". Thank you for your business!")
+    })
+};
