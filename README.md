@@ -5,8 +5,11 @@ Bamazon class HW
 This is my customer side of the Bamazon app!
 This was a little hard for me to do at first, but its getting easier over time.
 The theme of this store is collectibles/valuables.
-When ran, the application will present a list of inventory and prompt the user to pick an item and quantity of that item they want to buy.
-Customer answer will be sent to the database and if inventory allows for the purchase it will update, else it will let the customer know.
+
+When ran, the application will present a list of inventory and prompt 
+the user to pick an item and quantity of that item they want to buy.
+Customer answer will be sent to the database and if inventory allows 
+for the purchase it will update, else it will let the customer know.
 
 
 **Built with:**
